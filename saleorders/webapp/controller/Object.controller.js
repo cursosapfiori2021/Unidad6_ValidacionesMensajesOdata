@@ -2,8 +2,9 @@ sap.ui.define([
     "./BaseController",
     "sap/ui/model/json/JSONModel",
     "sap/ui/core/routing/History",
-    "../model/formatter"
-], function (BaseController, JSONModel, History, formatter) {
+    "../model/formatter",
+    "sap/m/MessageBox"
+], function (BaseController, JSONModel, History, formatter , MessageBox) {
     "use strict";
 
     return BaseController.extend("ns.saleorders.controller.Object", {
@@ -88,6 +89,12 @@ sap.ui.define([
             });
         },
 
+
+
+
+
+
+
         _onBindingChange : function () {
             var oView = this.getView(),
                 oViewModel = this.getModel("objectView"),
@@ -109,6 +116,37 @@ sap.ui.define([
                     oResourceBundle.getText("shareSendEmailObjectSubject", [sObjectId]));
                 oViewModel.setProperty("/shareSendEmailMessage",
                     oResourceBundle.getText("shareSendEmailObjectMessage", [sObjectName, sObjectId, location.href]));
+        },
+
+
+
+        factoryOrderItems : function(listId, oContext) {
+            var contextObject = oContext.getObject();    
+            if (contextObject.Quantity < '3') {
+                var objectListItem = new sap.m.ObjectListItem({
+                    title : 
+                    "Item: {ItemPosition}/ Cantidad: {Quantity}",
+                    number : 
+                    "{parts: [ {path: 'GrossAmount'}, {path: 'CurrencyCode'}], type:'sap.ui.model.type.Currency', formatOptions: {showMeasure: false}}",
+                    numberUnit: 
+                    "{CurrencyCode}"
+                });
+                return objectListItem;
+            } else {
+                var customListItem = new sap.m.CustomListItem({
+                    content: [
+                        new sap.m.Bar({
+                            contentLeft: 
+                            new sap.m.Label({ text: "{ItemPosition}"}),
+                            contentMiddle:
+                            new sap.m.ObjectStatus({ text: "{i18n>CantidadMayor} {Quantity}", state: "Error"}),
+                            contentRight: 
+                            new sap.m.Label({text:"{parts: [ {path:  'GrossAmount'}, {path: 'CurrencyCode'}], type:'sap.ui.model.type.Currency'}"}) 
+                        })
+                    ]
+                });
+                return customListItem;
+            }
         }
     });
 

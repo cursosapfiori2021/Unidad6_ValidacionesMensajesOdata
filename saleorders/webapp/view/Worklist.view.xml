@@ -2,6 +2,8 @@
     controllerName="ns.saleorders.controller.Worklist"
     xmlns="sap.m"
     xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true" 
+     xmlns:core="sap.ui.core"
     xmlns:semantic="sap.f.semantic">
 
     <semantic:SemanticPage
@@ -10,12 +12,62 @@
         toggleHeaderOnTitleClick="false">
 
         <semantic:titleHeading>
-            <Title
+            <Title id="_IDGenTitle1"
                 text="{i18n>worklistTitle}"
                 level="H2"/>
+
+                
         </semantic:titleHeading>
 
+
+     <semantic:headerContent> 
+  
+
+ <FlexBox id="_IDGenFlexBox1" height="65px" alignItems="Start" justifyContent="SpaceBetween">
+                <items>
+                 <VBox id="_IDGenVBox1">
+        
+                    <Label labelFor="_IDGenDatePicker2" id="_IDGenLabel2" text="{i18n>ChangedDate}" required="true"/>
+                    <DatePicker 
+                    id="_IDGenDatePicker2" 
+                    
+                    change="updateChangedDate" 
+                    valueState="{ChangedDateState}"/>
+              
+   
+  </VBox>
+  <VBox id="_IDGenVBox2">
+               
+                    <Label 
+                     labelFor="_IDGenSelect1"
+                     id="_IDGenLabel1" 
+                     text="{i18n>BillingStatus}" 
+                     required="true"/>
+                    <Select 
+                    id="_IDGenSelect1" 
+                    selectedKey="{BillingStatus}" 
+                    forceSelection="false" 
+                    enabled="{= ${worklistView>/Enabled} === true}"
+                    change="updateBillingStatus">
+                        <core:Item id="_IDGenItem1" key="P" text="{i18n>Paid}"/>
+                        <core:Item id="_IDGenItem2" key="1" text="{i18n>UnPaid}"/>
+                    </Select>    
+
+
+</VBox>
+
+             
+       
+               
+</items>
+ 
+</FlexBox> 
+
+ </semantic:headerContent>
         <semantic:content>
+
+
+
             <Table
                 id="table"
                 width="auto"
@@ -33,23 +85,28 @@
                 updateFinished=".onUpdateFinished">
 
                 <headerToolbar>
-                    <OverflowToolbar>
+                    <OverflowToolbar id="_IDGenOverflowToolbar1">
                         <Title
                             id="tableHeader"
                             text="{worklistView>/worklistTableTitle}"
                             level="H3"/>
-                        <ToolbarSpacer />
+                        <ToolbarSpacer id="_IDGenToolbarSpacer1" />
                         <SearchField
                             id="searchField"
                             tooltip="{i18n>worklistSearchTooltip}"
                             search=".onSearch">
                             <layoutData>
-                                <OverflowToolbarLayoutData
+                                <OverflowToolbarLayoutData id="_IDGenOverflowToolbarLayoutData1"
                                     maxWidth="200px"
                                     priority="NeverOverflow"/>
                             </layoutData>
                         </SearchField>
+
+
+                        
                     </OverflowToolbar>
+
+                    
                 </headerToolbar>
 
                 <columns>
@@ -62,13 +119,13 @@
                 </columns>
 
                 <items>
-                    <ColumnListItem
+                    <ColumnListItem id="_IDGenColumnListItem1"
                         type="Navigation"
                         press=".onPress">
                         <cells>
-                            <ObjectIdentifier
+                            <ObjectIdentifier id="_IDGenObjectIdentifier1"
                                 title="{SalesOrderID}"/>
-                            <ObjectNumber
+                            <ObjectNumber id="_IDGenObjectNumber1"
                                 number="{
                                     path: 'GrossAmount',
                                     formatter: '.formatter.numberUnit'

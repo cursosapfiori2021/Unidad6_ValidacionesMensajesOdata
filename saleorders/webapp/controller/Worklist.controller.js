@@ -3,8 +3,9 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "../model/formatter",
     "sap/ui/model/Filter",
-    "sap/ui/model/FilterOperator"
-], function (BaseController, JSONModel, formatter, Filter, FilterOperator) {
+    "sap/ui/model/FilterOperator",
+    "sap/m/MessageBox"
+], function (BaseController, JSONModel, formatter, Filter, FilterOperator, MessageBox) {
     "use strict";
 
     return BaseController.extend("ns.saleorders.controller.Worklist", {
@@ -26,15 +27,20 @@ sap.ui.define([
             this._aTableSearchState = [];
 
             // Model used to manipulate control states
+
+
+
             oViewModel = new JSONModel({
                 worklistTableTitle : this.getResourceBundle().getText("worklistTableTitle"),
                 shareSendEmailSubject: this.getResourceBundle().getText("shareSendEmailWorklistSubject"),
                 shareSendEmailMessage: this.getResourceBundle().getText("shareSendEmailWorklistMessage", [location.href]),
-                tableNoDataText : this.getResourceBundle().getText("tableNoDataText")
+                tableNoDataText : this.getResourceBundle().getText("tableNoDataText"),
+                Enabled: false
             });
             this.setModel(oViewModel, "worklistView");
-
         },
+
+
 
         /* =========================================================== */
         /* event handlers                                              */
@@ -142,7 +148,65 @@ sap.ui.define([
             if (aTableSearchState.length !== 0) {
                 oViewModel.setProperty("/tableNoDataText", this.getResourceBundle().getText("worklistNoDataWithSearchText"));
             }
-        }
+        },
+
+        
+
+        
+        updateChangedDate: function (oEvent) {
+
+            if (!oEvent.getSource().isValidValue() || oEvent.getSource().getValue() =='') {
+                oEvent.getSource().setProperty("valueState" , "Error" );
+                let oResourceBundle = this.getView().getModel("i18n").getResourceBundle();
+                MessageBox.error(oResourceBundle.getText("errorChangeDateValue"), {
+                    title: "Error",
+                    onClose: null,
+                    styleClass: "",
+                    actions: MessageBox.Action.Close,
+                    emphasizedAction: null,
+                    initialFocus: null,
+                    textDirection: sap.ui.core.TextDirection.Inherit
+                });
+            } else {
+                oEvent.getSource().setProperty("valueState" , "None" );
+                let oResourceBundle = this.getView().getModel("i18n").getResourceBundle();
+                this.getView().getModel("worklistView").setProperty("/Enabled", true);
+                MessageBox.confirm(this.getView().getModel("i18n").getResourceBundle().getText("confirm"), {
+                    onClose: function (oAction) {
+                        if (oAction === "OK") {
+                            MessageBox.success(oResourceBundle.getText("ChangeDateValue"), {
+                                title: "OK",
+                                onClose: null,
+                                styleClass: "",
+                                actions: MessageBox.Action.Close,
+                                emphasizedAction: null,
+                                initialFocus: null,
+                                textDirection: sap.ui.core.TextDirection.Inherit
+                            });
+                        }                       
+                    }.bind(this)
+                });
+
+
+
+            }
+        },
+
+
+        
+
+
+
+
+        updateNote: function(oEvent) {
+
+            if (oEvent.getSource().getValue()) {
+                oEvent.getSource().setProperty("valueState" , "None" );
+            } else {
+                oEvent.getSource().setProperty("valueState" , "Error" );
+            };
+        },
+
 
     });
 });
